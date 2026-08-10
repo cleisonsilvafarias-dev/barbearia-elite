@@ -1,0 +1,105 @@
+.agendamento-container {
+
+  min-height: 100vh;
+  background: #111;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+
+}
+
+
+.agendamento-card {
+
+  background: #1c1c1c;
+  width: 400px;
+  padding: 30px;
+  border-radius: 15px;
+  border: 2px solid gold;
+  color: white;
+
+}
+
+
+
+.agendamento-card h1 {
+
+  text-align: center;
+  color: gold;
+
+}
+
+
+
+.agendamento-card select,
+.agendamento-card input {
+
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  background: #222;
+  color: white;
+  border-radius: 8px;
+  border: 1px solid #555;
+
+}
+
+
+
+.horarios {
+
+  display: flex;
+  gap: 10px;
+
+}
+
+
+
+.horarios button {
+
+  flex: 1;
+  padding: 12px;
+  background: #222;
+  color: white;
+  border: 1px solid gold;
+  border-radius: 8px;
+  cursor: pointer;
+
+}
+
+
+
+.horarios button.selecionado {
+
+  background: gold;
+  color: black;
+  font-weight: bold;
+  transform: scale(1.1);
+
+}
+
+
+
+.horario-escolhido {
+
+  margin-top: 15px;
+  color: gold;
+  font-weight: bold;
+
+}
+
+
+
+.confirmar {
+
+  width: 100%;
+  margin-top: 20px;
+  padding: 15px;
+  background: gold;
+  color: black;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+
+}

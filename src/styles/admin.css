@@ -1,0 +1,412 @@
+.admin-container {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 40px 20px 70px;
+  background: #101010;
+  color: white;
+}
+
+.admin-container h1 {
+  max-width: 1100px;
+  margin: 0 auto 30px;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.sair {
+  display: block;
+  margin: 0 auto 35px;
+  padding: 11px 22px;
+  background: #1c1c1c;
+  color: #ddd;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.sair:hover {
+  background: #292929;
+  border-color: #555;
+}
+
+
+/* DASHBOARD */
+
+.dashboard {
+  max-width: 1100px;
+  margin: 0 auto 35px;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  gap: 18px;
+}
+
+.dashboard-card {
+  padding: 22px;
+  background: #191919;
+  border: 1px solid #303030;
+  border-radius: 12px;
+
+  text-align: center;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+.dashboard-card span {
+  display: block;
+  font-size: 25px;
+  margin-bottom: 8px;
+}
+
+.dashboard-card strong {
+  display: block;
+  font-size: 30px;
+}
+
+.dashboard-card p {
+  margin: 6px 0 0;
+  color: #999;
+  font-size: 14px;
+}
+
+.dashboard-card.pendente {
+  border-color: #6b5a16;
+}
+
+.dashboard-card.confirmado {
+  border-color: #275b38;
+}
+
+.dashboard-card.finalizado {
+  border-color: #285273;
+}
+
+
+/* FILTRO */
+
+.filtro-data {
+  max-width: 600px;
+  margin: 0 auto 35px;
+
+  padding: 24px;
+
+  background: #191919;
+
+  border: 1px solid #303030;
+
+  border-radius: 14px;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+.filtro-data h2 {
+  margin: 0 0 15px;
+
+  color: white;
+
+  font-size: 20px;
+}
+
+.filtro-data input {
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 13px 15px;
+
+  background: #111;
+
+  color: white;
+
+  border: 1px solid #444;
+
+  border-radius: 8px;
+
+  outline: none;
+
+  font-size: 15px;
+}
+
+.filtro-data input:focus {
+  border-color: #d4af37;
+}
+
+.limpar-filtro {
+  width: 100%;
+
+  margin-top: 10px;
+
+  padding: 11px;
+
+  background: #292929;
+
+  color: #ddd;
+
+  border: 1px solid #444;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  font-weight: 600;
+
+  transition: 0.2s;
+}
+
+.limpar-filtro:hover {
+  background: #353535;
+}
+
+
+/* TÍTULO */
+
+.titulo-agendamentos {
+  max-width: 1100px;
+
+  margin: 0 auto 20px;
+
+  font-size: 24px;
+}
+
+
+/* CARD DO AGENDAMENTO */
+
+.agendamento-card-admin {
+  max-width: 1100px;
+
+  margin: 0 auto 18px;
+
+  padding: 25px;
+
+  background: #191919;
+
+  border: 1px solid #303030;
+
+  border-radius: 14px;
+
+  box-sizing: border-box;
+
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.22);
+
+  transition: 0.2s;
+}
+
+.agendamento-card-admin:hover {
+  border-color: #444;
+
+  transform: translateY(-2px);
+}
+
+.agendamento-card-admin p {
+  margin: 8px 0;
+
+  color: #ddd;
+
+  line-height: 1.5;
+}
+
+.agendamento-card-admin p:first-child {
+  color: white;
+
+  font-size: 18px;
+
+  font-weight: 700;
+}
+
+
+/* STATUS */
+
+.status-select {
+  width: 100%;
+
+  max-width: 300px;
+
+  margin: 5px 0 15px;
+
+  padding: 12px 14px;
+
+  background: #111;
+
+  color: white;
+
+  border: 1px solid #444;
+
+  border-radius: 8px;
+
+  outline: none;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.status-select:focus {
+  border-color: #d4af37;
+}
+
+
+/* WHATSAPP */
+
+.whatsapp {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 12px 18px;
+
+  margin: 5px 8px 5px 0;
+
+  background: #1f8f4c;
+
+  color: white;
+
+  border: 1px solid #2cad61;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  transition: 0.2s;
+}
+
+.whatsapp:hover {
+  background: #27a957;
+
+  transform: translateY(-1px);
+
+  box-shadow: 0 5px 15px rgba(31, 143, 76, 0.25);
+}
+
+
+/* EXCLUIR */
+
+.excluir {
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 12px 18px;
+
+  margin: 5px 0;
+
+  background: #2a1717;
+
+  color: #ff8d8d;
+
+  border: 1px solid #6b2b2b;
+
+  border-radius: 8px;
+
+  cursor: pointer;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  transition: 0.2s;
+}
+
+.excluir:hover {
+  background: #491d1d;
+
+  border-color: #963838;
+
+  color: #ffb0b0;
+}
+
+
+/* NENHUM AGENDAMENTO */
+
+.nenhum {
+  max-width: 1100px;
+
+  margin: 30px auto;
+
+  padding: 35px;
+
+  background: #191919;
+
+  border: 1px solid #303030;
+
+  border-radius: 12px;
+
+  color: #888;
+
+  text-align: center;
+}
+
+
+/* CELULAR */
+
+@media (max-width: 800px) {
+
+  .dashboard {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-container {
+    padding: 30px 15px 50px;
+  }
+
+  .admin-container h1 {
+    font-size: 27px;
+  }
+
+}
+
+
+@media (max-width: 500px) {
+
+  .dashboard {
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+  }
+
+  .dashboard-card {
+    padding: 17px 10px;
+  }
+
+  .dashboard-card strong {
+    font-size: 25px;
+  }
+
+  .dashboard-card span {
+    font-size: 21px;
+  }
+
+  .agendamento-card-admin {
+    padding: 20px;
+  }
+
+  .whatsapp,
+  .excluir {
+    width: 100%;
+
+    margin-right: 0;
+
+    margin-top: 8px;
+  }
+
+  .status-select {
+    max-width: 100%;
+  }
+
+}
