@@ -1,14 +1,25 @@
-export function salvarAgendamento(agendamento: any) {
-  const dadosAtuais = localStorage.getItem("agendamentos");
+import { supabase } from "../lib/supabase";
 
-  const agendamentos = dadosAtuais
-    ? JSON.parse(dadosAtuais)
-    : [];
+export async function salvarAgendamento(agendamento: any) {
+  const { data, error } = await supabase
+    .from("agendamentos")
+    .insert([
+      {
+        nome: agendamento.nome,
+        telefone: agendamento.telefone,
+        servico: agendamento.servico,
+        barbeiro: agendamento.barbeiro,
+        data: agendamento.data,
+        horario: agendamento.horario,
+        status: agendamento.status || "pendente",
+      },
+    ])
+    .select();
 
-  agendamentos.push(agendamento);
+  if (error) {
+    console.error("Erro ao salvar agendamento:", error);
+    throw error;
+  }
 
-  localStorage.setItem(
-    "agendamentos",
-    JSON.stringify(agendamentos)
-  );
+  return data;
 }

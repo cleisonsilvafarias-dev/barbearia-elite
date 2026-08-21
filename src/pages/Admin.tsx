@@ -1,74 +1,184 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabase";
 import "../styles/admin.css";
 
 function Admin() {
   const [agendamentos, setAgendamentos] = useState<any[]>([]);
   const [dataFiltro, setDataFiltro] = useState("");
+  const [carregando, setCarregando] = useState(true);
 
   const navigate = useNavigate();
 
   const adminLogado = localStorage.getItem("adminLogado");
 
+  // Verifica se o administrador está logado
   useEffect(() => {
     if (adminLogado !== "true") {
       navigate("/login");
     }
   }, [adminLogado, navigate]);
 
-  function carregarAgendamentos() {
-    const dados = localStorage.getItem("agendamentos");
+  // Carrega os agendamentos do Supabase
+  async function carregarAgendamentos() {
+    try {
+      setCarregando(true);
 
-    if (dados) {
-      setAgendamentos(JSON.parse(dados));
-    } else {
-      setAgendamentos([]);
+      const { data, error } = await supabase
+        .from("agendamentos")
+        .select("*")
+        .order("data", { ascending: true })
+        .order("horario", { ascending: true });
+
+      if (error) {
+        console.error(
+          "Erro ao carregar agendamentos:",
+          error
+        );
+
+        alert(
+          "❌ Erro ao carregar os agendamentos:\n\n" +
+            error.message
+        );
+
+        return;
+      }
+
+      setAgendamentos(data || []);
+    } catch (error: any) {
+      console.error(
+        "Erro inesperado:",
+        error
+      );
+
+      alert(
+        "❌ Erro inesperado:\n\n" +
+          (error?.message || "Erro desconhecido.")
+      );
+    } finally {
+      setCarregando(false);
     }
   }
 
+  // Carrega os agendamentos quando o Admin estiver logado
   useEffect(() => {
     if (adminLogado === "true") {
       carregarAgendamentos();
     }
   }, [adminLogado]);
 
-  function excluirAgendamento(index: number) {
-    const novaLista = agendamentos.filter(
-      (_, i) => i !== index
+  // Excluir agendamento do Supabase
+  async function excluirAgendamento(id: number) {
+    const confirmar = window.confirm(
+      "Tem certeza que deseja excluir este agendamento?"
     );
 
-    setAgendamentos(novaLista);
+    if (!confirmar) {
+      return;
+    }
 
-    localStorage.setItem(
-      "agendamentos",
-      JSON.stringify(novaLista)
-    );
+    try {
+      const { error } = await supabase
+        .from("agendamentos")
+        .delete()
+        .eq("id", id);
+
+      if (error) {
+        console.error(
+          "Erro ao excluir agendamento:",
+          error
+        );
+
+        alert(
+          "❌ Não foi possível excluir o agendamento:\n\n" +
+            error.message
+        );
+
+        return;
+      }
+
+      // Remove da tela sem precisar recarregar
+      setAgendamentos((listaAtual) =>
+        listaAtual.filter(
+          (agendamento) =>
+            agendamento.id !== id
+        )
+      );
+
+      alert("🗑 Agendamento excluído!");
+    } catch (error: any) {
+      console.error(
+        "Erro inesperado ao excluir:",
+        error
+      );
+
+      alert(
+        "❌ Erro ao excluir:\n\n" +
+          (error?.message || "Erro desconhecido.")
+      );
+    }
   }
 
-  function alterarStatus(
-    index: number,
+  // Alterar status no Supabase
+  async function alterarStatus(
+    id: number,
     novoStatus: string
   ) {
-    const novaLista = [...agendamentos];
+    try {
+      const { error } = await supabase
+        .from("agendamentos")
+        .update({
+          status: novoStatus,
+        })
+        .eq("id", id);
 
-    novaLista[index] = {
-      ...novaLista[index],
-      status: novoStatus
-    };
+      if (error) {
+        console.error(
+          "Erro ao alterar status:",
+          error
+        );
 
-    setAgendamentos(novaLista);
+        alert(
+          "❌ Não foi possível alterar o status:\n\n" +
+            error.message
+        );
 
-    localStorage.setItem(
-      "agendamentos",
-      JSON.stringify(novaLista)
-    );
+        return;
+      }
+
+      // Atualiza o status na tela
+      setAgendamentos((listaAtual) =>
+        listaAtual.map((agendamento) =>
+          agendamento.id === id
+            ? {
+                ...agendamento,
+                status: novoStatus,
+              }
+            : agendamento
+        )
+      );
+    } catch (error: any) {
+      console.error(
+        "Erro inesperado ao alterar status:",
+        error
+      );
+
+      alert(
+        "❌ Erro ao alterar status:\n\n" +
+          (error?.message || "Erro desconhecido.")
+      );
+    }
   }
 
+  // Abrir WhatsApp
   function abrirWhatsApp(
     telefone: string,
     nome: string
   ) {
-    const numero = telefone.replace(/\D/g, "");
+    const numero = telefone.replace(
+      /\D/g,
+      ""
+    );
 
     const mensagem = encodeURIComponent(
       `Olá ${nome}! Aqui é da Barbearia Elite. Estamos entrando em contato sobre seu agendamento.`
@@ -80,11 +190,13 @@ function Admin() {
     );
   }
 
+  // Sair do Admin
   function sair() {
     localStorage.removeItem("adminLogado");
     navigate("/login");
   }
 
+  // Formata a data
   function formatarData(data: string) {
     if (!data) {
       return "";
@@ -93,28 +205,37 @@ function Admin() {
     return data.replace(/-/g, "/");
   }
 
+  // Total de agendamentos
   const totalAgendamentos =
     agendamentos.length;
 
+  // Pendentes
+  // Aceita tanto "pendente" quanto "Pendente"
   const pendentes =
     agendamentos.filter(
       (item) =>
         !item.status ||
-        item.status === "Pendente"
+        item.status.toLowerCase() ===
+          "pendente"
     ).length;
 
+  // Confirmados
   const confirmados =
     agendamentos.filter(
       (item) =>
-        item.status === "Confirmado"
+        item.status?.toLowerCase() ===
+        "confirmado"
     ).length;
 
+  // Finalizados
   const finalizados =
     agendamentos.filter(
       (item) =>
-        item.status === "Finalizado"
+        item.status?.toLowerCase() ===
+        "finalizado"
     ).length;
 
+  // Filtro por data
   const agendamentosFiltrados =
     dataFiltro
       ? agendamentos.filter(
@@ -141,7 +262,6 @@ function Admin() {
         🚪 Sair
       </button>
 
-
       <div className="dashboard">
 
         <div className="dashboard-card">
@@ -160,7 +280,6 @@ function Admin() {
 
         </div>
 
-
         <div className="dashboard-card pendente">
 
           <span>
@@ -177,7 +296,6 @@ function Admin() {
 
         </div>
 
-
         <div className="dashboard-card confirmado">
 
           <span>
@@ -193,7 +311,6 @@ function Admin() {
           </p>
 
         </div>
-
 
         <div className="dashboard-card finalizado">
 
@@ -213,7 +330,6 @@ function Admin() {
 
       </div>
 
-
       <div className="filtro-data">
 
         <h2>
@@ -224,12 +340,13 @@ function Admin() {
           type="date"
           value={dataFiltro}
           onChange={(e) =>
-            setDataFiltro(e.target.value)
+            setDataFiltro(
+              e.target.value
+            )
           }
         />
 
         {dataFiltro && (
-
           <button
             className="limpar-filtro"
             onClick={() =>
@@ -238,11 +355,9 @@ function Admin() {
           >
             Mostrar todos
           </button>
-
         )}
 
       </div>
-
 
       <h2 className="titulo-agendamentos">
 
@@ -254,8 +369,13 @@ function Admin() {
 
       </h2>
 
+      {carregando ? (
 
-      {agendamentosFiltrados.length === 0 ? (
+        <p className="nenhum">
+          ⏳ Carregando agendamentos...
+        </p>
+
+      ) : agendamentosFiltrados.length === 0 ? (
 
         <p className="nenhum">
 
@@ -268,112 +388,107 @@ function Admin() {
       ) : (
 
         agendamentosFiltrados.map(
-          (agendamento) => {
+          (agendamento) => (
 
-            const indexOriginal =
-              agendamentos.indexOf(
-                agendamento
-              );
+            <div
+              className="agendamento-card-admin"
+              key={agendamento.id}
+            >
 
-            return (
+              <p>
+                👤 Cliente:{" "}
+                {agendamento.nome}
+              </p>
 
-              <div
-                className="agendamento-card-admin"
-                key={indexOriginal}
+              <p>
+                📱 Telefone:{" "}
+                {agendamento.telefone}
+              </p>
+
+              <p>
+                ✂ Serviço:{" "}
+                {agendamento.servico}
+              </p>
+
+              <p>
+                💈 Barbeiro:{" "}
+                {agendamento.barbeiro}
+              </p>
+
+              <p>
+                📅 Data:{" "}
+                {formatarData(
+                  agendamento.data
+                )}
+              </p>
+
+              <p>
+                ⏰ Horário:{" "}
+                {agendamento.horario}
+              </p>
+
+              <p>
+                📌 Status:
+              </p>
+
+              <select
+                className="status-select"
+                value={
+                  agendamento.status
+                    ? agendamento.status
+                        .charAt(0)
+                        .toUpperCase() +
+                      agendamento.status.slice(1)
+                    : "Pendente"
+                }
+                onChange={(e) =>
+                  alterarStatus(
+                    agendamento.id,
+                    e.target.value
+                  )
+                }
               >
 
-                <p>
-                  👤 Cliente: {agendamento.nome}
-                </p>
+                <option value="Pendente">
+                  🟡 Pendente
+                </option>
 
-                <p>
-                  📱 Telefone:{" "}
-                  {agendamento.telefone}
-                </p>
+                <option value="Confirmado">
+                  🟢 Confirmado
+                </option>
 
-                <p>
-                  ✂ Serviço:{" "}
-                  {agendamento.servico}
-                </p>
+                <option value="Finalizado">
+                  🔵 Finalizado
+                </option>
 
-                <p>
-                  💈 Barbeiro:{" "}
-                  {agendamento.barbeiro}
-                </p>
+              </select>
 
-                <p>
-                  📅 Data:{" "}
-                  {formatarData(
-                    agendamento.data
-                  )}
-                </p>
+              <button
+                className="whatsapp"
+                onClick={() =>
+                  abrirWhatsApp(
+                    agendamento.telefone,
+                    agendamento.nome
+                  )
+                }
+              >
+                💬 Chamar no WhatsApp
+              </button>
 
-                <p>
-                  ⏰ Horário:{" "}
-                  {agendamento.horario}
-                </p>
+              <button
+                className="excluir"
+                onClick={() =>
+                  excluirAgendamento(
+                    agendamento.id
+                  )
+                }
+              >
+                🗑 Excluir Agendamento
+              </button>
 
-                <p>
-                  📌 Status:
-                </p>
+            </div>
 
-                <select
-                  className="status-select"
-                  value={
-                    agendamento.status ||
-                    "Pendente"
-                  }
-                  onChange={(e) =>
-                    alterarStatus(
-                      indexOriginal,
-                      e.target.value
-                    )
-                  }
-                >
-
-                  <option value="Pendente">
-                    🟡 Pendente
-                  </option>
-
-                  <option value="Confirmado">
-                    🟢 Confirmado
-                  </option>
-
-                  <option value="Finalizado">
-                    🔵 Finalizado
-                  </option>
-
-                </select>
-
-
-                <button
-                  className="whatsapp"
-                  onClick={() =>
-                    abrirWhatsApp(
-                      agendamento.telefone,
-                      agendamento.nome
-                    )
-                  }
-                >
-                  💬 Chamar no WhatsApp
-                </button>
-
-
-                <button
-                  className="excluir"
-                  onClick={() =>
-                    excluirAgendamento(
-                      indexOriginal
-                    )
-                  }
-                >
-                  🗑 Excluir Agendamento
-                </button>
-
-              </div>
-
-            );
-          }
+          )
         )
 
       )}

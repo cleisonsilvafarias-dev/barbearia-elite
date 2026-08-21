@@ -5,6 +5,10 @@ function Home() {
   return (
     <div className="home-container">
 
+      {/* =====================================
+          HERO
+      ====================================== */}
+
       <section className="hero">
 
         <div className="hero-content">
@@ -20,8 +24,8 @@ function Home() {
           </h1>
 
           <p className="hero-text">
-            Agende seu horário de forma rápida,
-            simples e sem complicação.
+            Corte, barba e cuidado profissional
+            em um ambiente pensado para você.
           </p>
 
           <Link
@@ -35,6 +39,10 @@ function Home() {
 
       </section>
 
+
+      {/* =====================================
+          SERVIÇOS
+      ====================================== */}
 
       <section className="servicos">
 
@@ -54,6 +62,8 @@ function Home() {
         <div className="servicos-grid">
 
 
+          {/* CORTE */}
+
           <div className="servico-card">
 
             <div className="servico-icon">
@@ -66,7 +76,7 @@ function Home() {
 
             <p>
               Corte profissional
-              personalizado.
+              personalizado para o seu estilo.
             </p>
 
             <strong>
@@ -75,6 +85,8 @@ function Home() {
 
           </div>
 
+
+          {/* BARBA */}
 
           <div className="servico-card">
 
@@ -87,7 +99,7 @@ function Home() {
             </h3>
 
             <p>
-              Acabamento e cuidado
+              Acabamento preciso e cuidado
               profissional.
             </p>
 
@@ -97,6 +109,8 @@ function Home() {
 
           </div>
 
+
+          {/* COMBO */}
 
           <div className="servico-card">
 
@@ -109,8 +123,8 @@ function Home() {
             </h3>
 
             <p>
-              O visual completo
-              em um só atendimento.
+              O visual completo em um único
+              atendimento.
             </p>
 
             <strong>
@@ -125,6 +139,10 @@ function Home() {
       </section>
 
 
+      {/* =====================================
+          CTA
+      ====================================== */}
+
       <section className="cta">
 
         <h2>
@@ -132,8 +150,8 @@ function Home() {
         </h2>
 
         <p>
-          Escolha seu horário e faça
-          seu agendamento.
+          Escolha seu horário e deixe o
+          resto com a Barbearia Elite.
         </p>
 
         <Link
@@ -146,6 +164,10 @@ function Home() {
       </section>
 
 
+      {/* =====================================
+          FOOTER
+      ====================================== */}
+
       <footer className="footer">
 
         <h3>
@@ -157,7 +179,7 @@ function Home() {
         </p>
 
         <span>
-          © 2026 Barbearia Elite
+          © 2026 Barbearia Elite. Todos os direitos reservados.
         </span>
 
       </footer>
